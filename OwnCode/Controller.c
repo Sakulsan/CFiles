@@ -3,8 +3,10 @@
 
 //Roation
 //right = (int)(k_PHI * (goal_theta - theta) * 0.5);
-right = 
-std::cout << left;
+v = k_omega * (cos(theta)*(x0-x)+sin(theta)*(y0-y));
+left = v;
+right = v;
+std::cout << left << " | " << (x0-x);
 std::cout << "\n";
 //right = (int)((float)omega * -0.5);
-left = -right;
+//left = -right;
