@@ -12,7 +12,14 @@ std::cout << "K_PHI: " << k_PHI << "\n";
 std::cout << "K_omega: " << k_omega << "\n";
 int goal_theta = 90;
 int omega = 0;
-int theta_g = 0;
+double theta_g = 0;
 int v = 0;
 int d_g = 0;
 int d_p = 0;
+
+//The state Q
+enum movement_states { idle , rotational , transitional };
+enum movement_states current_state = rotational;
+
+int xg_old = xg; //Used for tranition out of "Idle"
+int yg_old = yg;
