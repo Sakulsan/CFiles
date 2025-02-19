@@ -27,6 +27,6 @@ enum movement_states { idle , rotational , transitional };
 enum movement_states current_state = rotational;
 
 //Possible tuple/struct?
-int points_x [] = {1,1,0,0};
-int points_y [] = {0,1,1,0};
+int points_x [] = {1,2,2 ,3  ,3, 3};
+int points_y [] = {0,0,-1,-1,-2,-1};
 int i_current_point = 0;
