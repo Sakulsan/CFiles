@@ -1,55 +1,31 @@
+//Rotational controller
 //Roational (Task 6)
 //omega = (int)(k_PHI * (goal_theta - theta));
 //right = omega*0.5;
 //left = -omega*0.5;
-
 //Transitional (Task 7)
-//v = (int)(k_omega * (cos(theta* PI /180)*(x0-x)+sin(theta* PI /180)*(y0-y)));
 //left = v;
 //right = v;
-
 //Both (Task 9)
-//right = v + omega*0.5;
-//left = v - omega*0.5;
-
+// right = v + omega*0.5;
+// left = v - omega*0.5;
 //std::cout << left << " | " << (x0-x);
 //std::cout << "\n";
+//Go-to-Goal controller
+// Task 11 controller with omega = 0
 
-std::cout << "u_l" << " | " << left << "\n";
+theta_g = 180*(atan2(yg-y0,xg-x0))/PI;
+if(abs(theta_g) > 178 && theta < 135 ) {theta_left = theta + 360;}
+ else {theta_left = theta;}
 
-theta_g = 180*atan2(yg-y0,xg-x0)/PI;
-if((theta_g > 175 || theta_g < -175) && theta < -135) {std::cout << "Compensating" << "\n"; theta_left_comp = theta + 360;}
- else {theta_left_comp = theta;}
+d_g = (double)(k_omega_2 * (cos(theta_g* PI /180)*(xg-x)+ sin(theta_g* PI /180)*(yg-y)));
+std::cout << "o";
 
-d_g = (int)(k_omega_2 * (cos(PI*theta_g/180)*(xg-x)+sin(PI*theta_g/180)*(yg-y)));
-//right = d_g;
-//left = d_g;
-
-
-
-
-//d_p = (int)(k_PHI_2 * p * (theta_g-theta_left_comp));
-d_p = (sin(PI*theta_g/180)*(x+p*cos(PI*theta_left_comp/180)-x0))   -  (cos(PI*theta_g/180)*(y+p*sin(PI*theta_left_comp/180)-y0));
-
-std::cout << "d_p" << " | " << d_p << "\n";
-
-omega = (int)(k_PSI_2 * d_p);
-
-
-
-right = d_g + omega * 0.5;
-left =  d_g - omega * 0.5;
-
-//Full controller (Task 15)
-//right = d_g + omega * 0.5;
-//left =  d_g - omega * 0.5;
-
-/*
 //Transitions G
 switch (current_state) {
  case rotational:
-   if (abs(d_p) < 1) {current_state = transitional;
-     std::cout << "stopped rotating" << "\n";
+   if ((int)(theta_g) == (int)theta_left) {current_state = transitional;
+     std::cout << "stopped rotating, omega=" << omega << "\n";
    }
    break;
  case transitional:
@@ -66,14 +42,20 @@ switch (current_state) {
 //controller functions f
 switch (current_state) {
  case rotational :
-   std::cout << "Rotating" << " | " << d_p << "\n";
-   right = (int)(omega * 0.5);
-   left =  (int)(-omega * 0.5);
+   v = (int)(k_omega * (cos(theta* PI /180)*(x0-x)+sin(theta* PI /180)*(y0-y))); //The velocity to align our position with the origin (be nudge tolerant)
+   omega = (int)(k_PHI * (theta_g - theta_left)); //Rotational velocity when rotating
+
+   std::cout << "Rotating" << " | " << omega << "\n";
+   right = (int)(v+omega * 0.5); //Task 9
+   left =  (int)(v-omega * 0.5);
    break ;
- case transitional :
-   std::cout << "Transitioning" << " | " << d_g << " | (" << d_p << ")\n";
-   right = (int)d_g;
-   left = (int)d_g;
+ case transitional:
+   d_p = (sin(theta_g * PI/180.0) * ((x + p*cos(theta_left * PI/180.0)) - x0))
+     - (cos(theta_g * PI/180.0) * ((y + p*sin(theta_left * PI/180.0)) - y0));
+   omega = (double)(k_PHI_2 * d_p);
+   std::cout << "Transitioning" << " | " << d_g << " | (Rotation offset: " << d_p << ")\n";
+   right = 0.5*d_g + omega; //Task 15
+   left =  0.5*d_g - omega;
    break ;
  case idle :
  default:
@@ -82,4 +64,3 @@ switch (current_state) {
    right = 0;
    break;
  }
-*/
